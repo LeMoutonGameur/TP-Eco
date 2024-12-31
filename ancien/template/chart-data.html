@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factures - Graphique</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        async function drawChart() {
+            try {
+                // Récupération des données JSON depuis l'API
+                const response = await fetch('/chart-data');
+                const jsonData = await response.json();
+
+                // Formatage des données pour Google Charts
+                const chartData = [['Type de Facture', 'Montant']];
+                jsonData.forEach(item => chartData.push([item.type, item.montant]));
+
+                // Création et configuration du graphique
+                const data = google.visualization.arrayToDataTable(chartData);
+                const options = {
+                    title: 'Répartition des Montants par Type de Facture',
+                    pieHole: 0.4, // Graphique en camembert "troué" (type Donut)
+                    width: 900,
+                    height: 500
+                };
+
+                // Affichage du graphique
+                const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            } catch (error) {
+                console.error("Erreur lors du chargement des données :", error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Répartition des Montants des Factures</h1>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+</body>
+</html>

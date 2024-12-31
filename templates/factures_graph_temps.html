@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphique Temporel des Factures</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <!-- Lien vers la favicon -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Home Button -->
+        <a href="/" class="home-button">
+            <svg class="home-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M12 3l8 8h-3v8h-4v-6H9v6H5v-8H2l8-8z" />
+            </svg>
+            Home
+        </a>
+        <!-- Retour au logement Button -->
+        <a href="/logement/{{ id_logement }}" class="home-button">
+            Retour au logement
+        </a>
+    </div>
+
+    <header>
+        <h1>Graphique Temporel des Factures pour le Logement {{ id_logement }}</h1>
+    </header>
+    <main>
+        <div>
+            <label for="typeSelector">Type de Consommation :</label>
+            <select id="typeSelector">
+                <option value="all" selected>Tous les types</option>
+                {% set seen_types = [] %} <!-- Initialisation de la liste -->
+                {% for facture in factures %}
+                {% if facture.type_facture not in seen_types %}
+                {% set _ = seen_types.append(facture.type_facture) %}
+                <option value="{{ facture.type_facture }}">{{ facture.type_facture }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <canvas id="facturesChart" width="800" height="400"></canvas>
+    </main>
+    <script>
+        const svgElement = document.querySelector('.home-icon');
+        svgElement.style.width = '24px';
+        svgElement.style.height = '24px';
+
+        const factures = {{ factures | tojson }};
+        
+        // Préparer les données pour Chart.js
+        const groupedData = factures.reduce((acc, curr) => {
+            if (!acc[curr.type_facture]) acc[curr.type_facture] = [];
+            acc[curr.type_facture].push({
+                x: curr.date, // Date sous forme de chaîne
+                y: curr.montant // Montant de la facture
+            });
+            return acc;
+        }, {});
+
+        // Créer les datasets pour chaque type de facture
+        const datasets = Object.keys(groupedData).map(type => ({
+            label: type,
+            data: groupedData[type],
+            borderColor: getRandomColor(),
+            fill: false,
+            tension: 0.1
+        }));
+
+        // Configuration du graphique
+        const ctx = document.getElementById('facturesChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Graphique des factures par type'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time', // Utilisation de l'échelle temporelle
+                        time: {
+                            unit: 'month' // Vous pouvez ajuster à day, week, etc.
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Montant (€)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Mise à jour du graphique en fonction du type sélectionné
+        document.getElementById('typeSelector').addEventListener('change', (event) => {
+            const type = event.target.value;
+            if (type === 'all') {
+                chart.data.datasets = datasets;
+            } else {
+                chart.data.datasets = datasets.filter(d => d.label === type);
+            }
+            chart.update();
+        });
+
+        // Fonction pour générer des couleurs aléatoires
+        function getRandomColor() {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+            return `rgba(${r}, ${g}, ${b}, 0.8)`;
+        }
+    </script>
+</body>
+</html>

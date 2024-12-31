@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capteurs/Actionneurs - {{ piece['nom'] }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Lien vers la favicon -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Home Button -->
+        <a href="/" class="home-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="home-icon">
+                <path d="M12 3l8 8h-3v8h-4v-6H9v6H5v-8H2l8-8z"/>
+            </svg>
+            Home
+        </a>
+        <!-- Retour aux pièces Button -->
+        <a href="/logement/{{ piece['id_logement'] }}" class="home-button">
+            Retour aux pièces
+        </a>
+    </div>
+
+    <header>
+        <h1>Capteurs/Actionneurs dans la pièce : {{ piece['nom'] }}</h1>
+        <p>
+            <strong>Coordonnées :</strong> {{ piece['coordonnees'] }}
+        </p>
+    </header>
+    <main>
+        <!-- Liste des capteurs/actionneurs -->
+        <section>
+            <h2>Liste des Capteurs/Actionneurs</h2>
+            <ul>
+                {% for capteur in capteurs %}
+                <li style="margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-radius: 8px;">
+                    <strong>Référence Commerciale :</strong> {{ capteur['ref_commerciale'] }}<br>
+                    <strong>Type :</strong> {{ capteur['nom_type'] or "Non défini" }}<br>
+                    <strong>Unité de Mesure :</strong> {{ capteur['unite_mesure'] or "Non défini" }}<br>
+                    <strong>Port de Communication :</strong> {{ capteur['port_communication'] }}<br>
+                    <strong>Date d'Insertion :</strong> {{ capteur['date_insertion'] }}<br>
+                    <strong>Topic MQTT :</strong> {{ capteur['topic'] or "Non défini" }}<br>
+                    <!-- Lien vers les mesures du capteur -->
+                    <a href="/piece/{{ id_piece }}/capteur/{{ capteur['id_capteur_actionneur'] }}/mesures" style="color: green; text-decoration: none;">
+                        Voir les mesures
+                    </a>                    
+                </li>
+                {% else %}
+                <p>Aucun capteur/actionneur dans cette pièce.</p>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Formulaire pour ajouter un capteur/actionneur -->
+        <section>
+            <h2>Ajouter un Nouveau Capteur/Actionneur</h2>
+            <form method="POST" action="/piece/{{ piece['id_piece'] }}/add-capteur">
+                <label for="type_capteur">Type de Capteur/Actionneur :</label>
+                <select id="type_capteur" name="type_capteur" required>
+                    <option value="" disabled selected>Choisissez un type</option>
+                    {% for type in types %}
+                    <option value="{{ type['nom_type'] }}">{{ type['nom_type'] }} ({{ type['unite_mesure'] }})</option>
+                    {% endfor %}
+                </select>               
+                <label for="port_communication">Port de Communication :</label>
+                <input type="text" id="port_communication" name="port_communication" placeholder="Entrez le port de communication" required>
+
+                <label for="topic">Topic MQTT :</label>
+                <input type="text" id="topic" name="topic" placeholder="Entrez le topic MQTT" required>
+        
+                <button type="submit">Ajouter</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

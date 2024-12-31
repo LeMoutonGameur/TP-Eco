@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pièces du Logement</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Lien vers la favicon -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Home Button -->
+        <a href="/" class="home-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="home-icon">
+                <path d="M12 3l8 8h-3v8h-4v-6H9v6H5v-8H2l8-8z"/>
+            </svg>
+            Home
+        </a>
+        <!-- Retour à la liste des logements Button -->
+        <a href="/" class="home-button">
+            Retour aux logements
+        </a>
+    </div>
+
+    <!-- En-tête avec météo -->
+    <header>
+        <h1>Pièces du Logement {{ id_logement }}</h1>
+        <p>
+            <strong>Adresse :</strong> {{ logement['adresse'] }}<br>
+            <strong>Téléphone :</strong> {{ logement['numero_telephone'] }}<br>
+            <strong>Adresse IP :</strong> {{ logement['adresse_ip'] }}
+        </p>
+        <h2>Météo actuelle</h2>
+        <p>
+            <strong>Température :</strong> {{ weather['temperature'] }} °C<br>
+            <strong>Description :</strong> {{ weather['description'] }}
+        </p>
+    </header>
+
+    <!-- Liste des pièces -->
+    <main>
+        <section>
+            <h2>Liste des Pièces</h2>
+            <ul>
+                {% for piece in pieces %}
+                <li style="margin-bottom: 15px; padding: 10px; background-color: #f1f1f1; border-radius: 8px;">
+                    <strong>Nom :</strong> {{ piece['nom'] }}<br>
+                    <strong>Coordonnées :</strong> {{ piece['coordonnees'] }}<br>
+                    <a href="/piece/{{ piece['id_piece'] }}" style="color: blue; text-decoration: none;">
+                        Voir les capteurs/actionneurs
+                    </a>
+                </li>
+                {% else %}
+                <p>Aucune pièce disponible pour ce logement.</p>
+                {% endfor %}
+            </ul>
+        </section>
+        
+        <!-- Formulaire pour ajouter une pièce -->
+        <section>
+            <h2>Ajouter une Nouvelle Pièce</h2>
+            <form method="POST" action="/logement/{{ id_logement }}/add-piece">
+                <label for="nom">Nom de la Pièce :</label>
+                <input type="text" id="nom" name="nom" placeholder="Entrez un nom" required>
+        
+                <label for="coordonnees">Coordonnées :</label>
+                <input type="text" id="coordonnees" name="coordonnees" placeholder="Entrez les coordonnées (x,y,z)" required>
+        
+                <button type="submit">Ajouter</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

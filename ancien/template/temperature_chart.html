@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Evolution</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Évolution de la Température</h1>
+    <canvas id="temperatureChart" width="800" height="400"></canvas>
+    <script>
+        const temperatureData = {{ temperature_data|tojson }};
+        const labels = temperatureData.map(data => data.date);
+        const values = temperatureData.map(data => data.value);
+
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Température (°C)',
+                    data: values,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                            tooltipFormat: 'DD/MM/YYYY HH:mm',
+                            displayFormats: {
+                                hour: 'DD/MM HH:mm'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date et Heure'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Température (°C)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

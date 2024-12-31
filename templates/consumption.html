@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consommation du Logement</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lien vers la favicon -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="navbar">
+        <!-- Home Button -->
+        <a href="/" class="home-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="home-icon">
+                <path d="M12 3l8 8h-3v8h-4v-6H9v6H5v-8H2l8-8z"/>
+            </svg>
+            Home
+        </a>
+        <!-- Retour au logement Button -->
+        <a href="/logement/{{ id_logement }}" class="home-button">
+            Retour au logement
+        </a>
+    </div>
+    
+    <header>
+        <h1>Consommation du Logement {{ id_logement }}</h1>
+    </header>
+    <main>
+        <h2>Graphique de Consommation</h2>
+        <canvas id="consumptionChart" width="800" height="400"></canvas>
+    </main>
+    <script>
+        // Récupération des données depuis le backend
+        const consumptionData = {{ consumption_data | tojson }};
+
+        // Préparer les données pour Chart.js
+        const labels = [...new Set(consumptionData.map(item => item.date))].sort();
+        const datasets = {};
+        consumptionData.forEach(item => {
+            if (!datasets[item.type_facture]) {
+                datasets[item.type_facture] = {
+                    label: item.type_facture,
+                    data: Array(labels.length).fill(0)
+                };
+            }
+            const index = labels.indexOf(item.date);
+            datasets[item.type_facture].data[index] = item.total;
+        });
+
+        // Configuration pour Chart.js
+        const data = {
+            labels: labels,
+            datasets: Object.values(datasets).map(dataset => ({
+                label: dataset.label,
+                data: dataset.data,
+                borderWidth: 2,
+                fill: false,
+            }))
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Consommation par Type et Date'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Consommation (kWh ou autre)'
+                        }
+                    }
+                }
+            }
+        };
+
+        // Initialiser le graphique
+        const ctx = document.getElementById('consumptionChart').getContext('2d');
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

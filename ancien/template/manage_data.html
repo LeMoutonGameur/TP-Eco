@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Données</title>
+</head>
+<body>
+    <h1>Gestion des Données</h1>
+
+    <h2>Mesures</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID Capteur</th>
+                <th>Valeur</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="mesures">
+            <!-- Données des mesures seront insérées ici -->
+        </tbody>
+    </table>
+
+    <h2>Factures</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID Logement</th>
+                <th>Type</th>
+                <th>Montant</th>
+                <th>Valeur Consommée</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="factures">
+            <!-- Données des factures seront insérées ici -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchMesures() {
+            const response = await fetch('/mesures');
+            const data = await response.json();
+            document.getElementById('mesures').innerHTML = data.map(mesure => `
+            <tr>
+                <td>${mesure.id}</td>
+                <td>${mesure.id_capteur_actionneur}</td>
+                <td>${mesure.valeur}</td>
+                <td>${mesure.date_insertion}</td>
+            </tr>
+        `).join('');
+    }
+    fetchMesures();
+    
+        async function fetchData(endpoint, tableId) {
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            const tableBody = document.getElementById(tableId);
+
+            tableBody.innerHTML = data
+                .map(
+                    item => `
+                    <tr>
+                        ${Object.values(item)
+                            .map(value => `<td>${value}</td>`)
+                            .join("")}
+                        <td>
+                            <button onclick="deleteData('${endpoint}', ${item.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `
+                )
+                .join("");
+        }
+
+        async function deleteData(endpoint, id) {
+            await fetch(`${endpoint}/${id}`, { method: "DELETE" });
+            alert("Donnée supprimée !");
+            location.reload();
+        }
+
+        fetchData("/mesures", "mesures");
+        fetchData("/factures", "factures");
+    </script>
+</body>
+</html>

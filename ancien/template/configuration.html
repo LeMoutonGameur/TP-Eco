@@ -1,0 +1,39 @@
+<div class="container mt-4">
+    <h2>Configuration des Maisons, Pièces et Capteurs</h2>
+
+    <!-- Formulaire d'ajout d'une maison -->
+    <h3>Ajouter une Maison</h3>
+    <form id="addHouseForm">
+        <input type="text" id="houseName" placeholder="Nom de la maison" required>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+
+    <!-- Liste des maisons -->
+    <h3>Liste des Maisons</h3>
+    <ul id="houseList"></ul>
+</div>
+
+<script>
+    // Fonction pour récupérer et afficher les maisons
+    async function fetchHouses() {
+        const response = await fetch('/houses');
+        const houses = await response.json();
+        const list = document.getElementById('houseList');
+        list.innerHTML = houses.map(h => `<li>${h.nom}</li>`).join('');
+    }
+
+    // Ajouter une maison
+    document.getElementById('addHouseForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const houseName = document.getElementById('houseName').value;
+        await fetch('/houses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nom: houseName })
+        });
+        fetchHouses();
+    });
+
+    // Appel initial
+    fetchHouses();
+</script>

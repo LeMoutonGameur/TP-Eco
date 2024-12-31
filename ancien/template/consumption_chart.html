@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consommation par Type</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Consommation par Type en Fonction du Temps</h1>
+        <canvas id="consumptionChart" width="800" height="400"></canvas>
+        <button onclick="fetchData()">Recharger les Données</button>
+    </div>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/consumption-data/1');
+            const jsonData = await response.json();
+
+            const groupedData = {};
+            jsonData.forEach(item => {
+                const date = item.date;
+                const type = item.type_facture;
+                if (!groupedData[type]) groupedData[type] = {};
+                groupedData[type][date] = item.total;
+            });
+
+            const labels = [...new Set(jsonData.map(item => item.date))].sort();
+            const datasets = Object.keys(groupedData).map(type => ({
+                label: type,
+                data: labels.map(date => groupedData[type][date] || 0),
+                borderWidth: 2,
+                fill: false
+            }));
+
+            const ctx = document.getElementById('consumptionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: { responsive: true }
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphique des Factures</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Graphique des Factures pour le Logement {{ id_logement }}</h1>
+    <canvas id="facturesChart" width="800" height="400"></canvas>
+    <a href="/logement/{{ id_logement }}" style="margin-top: 20px; display: block;">Retour au logement</a>
+    <script>
+        // Récupérer les données passées par FastAPI
+        const factures = {{ factures | tojson }};
+        
+        // Préparer les données pour Chart.js
+        const labels = factures.map(f => f.type_facture);
+        const data = factures.map(f => f.total);
+
+        // Configuration de Chart.js
+        const ctx = document.getElementById('facturesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',  // Vous pouvez changer en 'bar', 'line', etc.
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Montant des Factures (€)',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Répartition des Montants par Type de Facture'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

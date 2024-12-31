@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesures du Capteur - {{ capteur['ref_commerciale'] }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lien vers la favicon -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Home Button -->
+        <a href="/" class="home-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="home-icon">
+                <path d="M12 3l8 8h-3v8h-4v-6H9v6H5v-8H2l8-8z"/>
+            </svg>
+            Home
+        </a>
+        <a href="/piece/{{ id_piece }}" class="home-button">Retour à la pièce</a>
+    </div>
+
+    <header>
+        <h1>Mesures du Capteur : {{ capteur['ref_commerciale'] }}</h1>
+        <p>
+            <strong>Type :</strong> {{ capteur['nom_type'] or "Non défini" }}<br>
+            <strong>Unité :</strong> {{ capteur['unite_mesure'] or "Non défini" }}
+        </p>
+    </header>
+    <main>
+        <h2>Graphique des Mesures</h2>
+        <canvas id="mesuresChart" width="800" height="400"></canvas>
+
+        <h2>Liste des Mesures</h2>
+        <ul>
+            {% for mesure in mesures %}
+            <li style="margin-bottom: 10px; padding: 10px; background-color: #f9f9f9; border-radius: 8px;">
+                <strong>Date :</strong> {{ mesure['date'] }}<br>
+                <strong>Valeur :</strong> {{ mesure['valeur'] }} {{ capteur['unite_mesure'] or "" }}
+            </li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <script>
+        // Data from backend
+        const mesures = {{ mesures | tojson }};
+        const labels = mesures.map(m => m.date);
+        const data = mesures.map(m => m.valeur);
+
+        // Initialize Chart.js
+        const ctx = document.getElementById('mesuresChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Mesures',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Mesures du Capteur'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Valeur ({{ capteur["unite_mesure"] or "" }})'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

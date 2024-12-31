@@ -1,0 +1,9 @@
+Ouvrir l'environnement Fast API et taper dans le terminal pour lancer le serveur :
+
+conda activate fastapi-env
+cd C:\Users\arthu\OneDrive\Bureau\Année4\IoT\TP Eco
+fastapi dev main.py
+
+adresse esp : 192.168.94.163
+
+relancer la base de donnée : sqlite3 logement.db < logement.sql

@@ -1,0 +1,147 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+h1, h2 {
+    margin: 10px;
+    text-align: center;
+}
+
+main {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #eee;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+}
+
+label, input, button {
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Style des logements */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+li strong {
+    color: #007bff;
+}
+
+li:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+/* Styles pour le graphique (canvas) */
+canvas {
+    margin: 20px auto;
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #0056b3; /* Slightly darker than header */
+    display: flex;
+    align-items: center;
+    padding: 5px 15px; /* Reduce padding to make it compact */
+}
+
+/* Home Button */
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    font-size: 14px; /* Match the size of regular text */
+    font-weight: normal;
+    padding: 0; /* Remove internal padding */
+    margin-right: 10px; /* Add spacing if multiple buttons exist */
+    background-color: transparent; /* No background for the button */
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.home-button:hover {
+    color: #ffdd57; /* Highlight color on hover */
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+/* Home Icon */
+.home-icon {
+    width: 24px; /* Explicit width */
+    height: 24px; /* Explicit height */
+    fill: currentColor; /* Use current text color */
+    stroke: none; /* Ensure no stroke is applied */
+    vertical-align: middle; /* Align nicely with text */
+}
+

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'Accueil - Gestion des Logements</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Lien vers la favicon -->
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <!-- Home Button -->
+        <a href="/" class="home-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="home-icon">
+                <path d="M12 3l8 8h-3v8h-4v-6H9v6H5v-8H2l8-8z"/>
+            </svg>
+            Home
+        </a>
+    </div>
+
+    <header>
+        <h1>Bienvenue sur la Gestion des Logements</h1>
+    </header>
+    <main>
+        <!-- Section d'affichage des logements -->
+        <section>
+            <h2>Liste des Logements</h2>
+            <ul>
+                {% for logement in logements %}
+                <li style="margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-radius: 8px;">
+                    <strong>Adresse :</strong> {{ logement['adresse'] }}<br>
+                    <strong>Ville :</strong> {{ logement['ville'] }}<br>
+                    <strong>Téléphone :</strong> {{ logement['numero_telephone'] }}<br>
+                    <strong>Adresse IP :</strong> {{ logement['adresse_ip'] }}<br>
+                    <strong>Date d'Insertion :</strong> {{ logement['date_insertion'] }}<br>
+                    <a href="/logement/{{ logement['id_logement'] }}" style="color: blue; text-decoration: none;">Voir les pièces</a> |
+                    <a href="/logement/{{ logement['id_logement'] }}/consumption" style="color: green; text-decoration: none;">Voir la consommation</a> |
+                    <a href="/logement/{{ logement['id_logement'] }}/factures/graphique" style="color: orange; text-decoration: none;">Voir les factures</a>
+                </li>
+                {% else %}
+                <p>Aucun logement disponible.</p>
+                {% endfor %}
+            </ul>
+        </section>             
+
+        <!-- Formulaire pour ajouter un logement -->
+        <section>
+            <h2>Ajouter un Nouveau Logement</h2>
+            <form method="POST" action="/add-logement" style="display: flex; flex-direction: column; gap: 10px;">
+                <label for="adresse">Adresse :</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Entrez une adresse" required>
+                
+                <label for="ville">Ville :</label>
+                <input type="text" id="ville" name="ville" placeholder="Entrez une ville" required>
+
+                <label for="numero_telephone">Numéro de Téléphone :</label>
+                <input type="text" id="numero_telephone" name="numero_telephone" placeholder="Entrez un numero de telephone" required>
+
+                <label for="adresse_ip">Adresse IP :</label>
+                <input type="text" id="adresse_ip" name="adresse_ip" placeholder="Entrez une adresse ip" required>
+
+                <button type="submit" style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Ajouter</button>
+            </form>
+        </section>            
+    </main>
+</body>
+</html>

@@ -1,20 +1,30 @@
-// Strat Mosquitto 
-// Terminal classique 
+## DANS UN TERMIANL CLASSIQUE 
 
-cd "C:\Program Files\mosquitto"   //repertoire ou mosquitto est installé
+# Start Mosquitto
+cd "repertoire ou mosquitto est installé"   
 sc start mosquitto
 mosquitto -v
 
-// pour espionner un topic : mosquitto_sub -h localhost -t "test/topic"  //mettre le nom du topic entre les guillemets
-// pour verifier l'ip de l'ordi : ipconfig
+# Pour espionner un topic
+mosquitto_sub -h localhost -t "nom_topic" 
 
-// Ouvrir l'environnement Fast API et taper dans le terminal pour lancer le serveur :
+# Pour verifier l'ip de l'ordi 
+ipconfig
 
-conda activate fastapi-env                                  // toute les librairies ont été instalée sur l'environnement
-                                                            // liste librairies utilisées qui ne sont pas de base dans python : fastapi, paho.mqtt, uvicorn, jinja2, httpx
 
-cd C:\Users\arthu\OneDrive\Bureau\Année4\IoT\TP Eco         //repertoire du dossier
-fastapi dev main.py                                         //lancement application
+## DANS UN TERMINAL ANACONDA
+# Ouvrir l'environnement Fast API et taper dans le terminal pour lancer le serveur :
 
-// relancer la base de donnée après modification : sqlite3 logement.db < logement.sql
+
+# toute les librairies ont été instalée sur l'environnement
+# liste librairies utilisées qui ne sont pas de base dans python : fastapi, paho.mqtt, uvicorn, jinja2, httpx
+conda activate Nom_environement                                  
+
+# repertoire du dossier
+cd Repertoire_du_projet
+# lancement application
+fastapi dev main.py                                         
+
+# relancer la base de donnée après modification
+sqlite3 logement.db < logement.sql
 
